@@ -25,3 +25,13 @@ A systemd user unit `nvimx@.service` that runs `nvim --headless --listen %t/nvim
 - It uses the `ssh` of the system, so your ssh config, agent and macOS keychain apply.
 - Neovide gives a remote server its own clipboard provider: copy and paste use the clipboard of this machine.
 - Closing the window or Cmd-Q detaches. The server keeps running; more than one GUI can attach.
+
+## Changes
+
+<!-- changelog:start -->
+## 0.1.0 — 2026-10-26
+
+- First release.
+
+[All changes](CHANGELOG.md)
+<!-- changelog:end -->

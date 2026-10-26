@@ -37,7 +37,9 @@ After `start()`, every global folder change moves tmux. When no tmux client is p
 ## Changes
 
 <!-- changelog:start -->
-No release yet.
+## 0.1.0 — 2026-10-26
+
+- First release.
 
 [All changes](CHANGELOG.md)
 <!-- changelog:end -->
