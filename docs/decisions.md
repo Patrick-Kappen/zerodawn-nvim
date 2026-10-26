@@ -2,6 +2,10 @@
 
 Short records of choices that shape the repository. Newest at the top.
 
+## 4. An addon can be a program (2026-10-26)
+
+An addon with a `package.nix` builds from that file; the others build as Neovim plugins. The first one is `nvimx-remote`, a shell program that runs on the Mac. Reason: a program that belongs to Neovim gets the same rules as a plugin: README, AGENTS.md, tests, commit scope, version and changelog. Its tests also run with `nvim -l`, and call the program with `vim.system`.
+
 ## 3. A version for each addon (2026-10-26)
 
 Each addon has `VERSION` and `CHANGELOG.md` and the tag `<addon>-v<version>`; the repository has `VERSION`, `CHANGELOG.md` and the tag `v<version>`. The version level comes from a `Change:` trailer on each commit. Reason: the same release model as zerodawn-pi, and an addon gets a new version only when it changed.
