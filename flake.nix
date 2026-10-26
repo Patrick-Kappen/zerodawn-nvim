@@ -18,13 +18,18 @@
     let
       forAll =
         f:
-        nixpkgs.lib.genAttrs [ "x86_64-linux" ] (
-          system:
-          f {
-            inherit system;
-            pkgs = nixpkgs.legacyPackages.${system};
-          }
-        );
+        nixpkgs.lib.genAttrs
+          [
+            "x86_64-linux"
+            "aarch64-darwin"
+          ]
+          (
+            system:
+            f {
+              inherit system;
+              pkgs = nixpkgs.legacyPackages.${system};
+            }
+          );
       inherit (nixpkgs) lib;
       # Every addon has a VERSION, a CHANGELOG.md, a README.md, an AGENTS.md and at least one test; a missing one fails the evaluation.
       checkAddon =
@@ -55,19 +60,23 @@
           builtins.attrNames (lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./addons))
         )
       );
+      # An addon with a package.nix is a program, for example a client that runs on another machine; the rest are Neovim plugins.
       plugin =
         pkgs: name:
         let
           version = lib.trim (builtins.readFile (./addons + "/${name}/VERSION"));
         in
-        pkgs.vimUtils.buildVimPlugin {
-          pname = "zerodawn-${name}";
-          inherit version;
-          src = lib.fileset.toSource {
-            root = ./addons + "/${name}";
-            fileset = lib.fileset.difference (./addons + "/${name}") (./addons + "/${name}/tests");
+        if builtins.pathExists (./addons + "/${name}/package.nix") then
+          pkgs.callPackage (./addons + "/${name}/package.nix") { inherit version; }
+        else
+          pkgs.vimUtils.buildVimPlugin {
+            pname = "zerodawn-${name}";
+            inherit version;
+            src = lib.fileset.toSource {
+              root = ./addons + "/${name}";
+              fileset = lib.fileset.difference (./addons + "/${name}") (./addons + "/${name}/tests");
+            };
           };
-        };
       runTests =
         pkgs: name:
         pkgs.runCommand "tests-${name}"
@@ -126,7 +135,10 @@
           };
         }
       );
-      packages = forAll ({ pkgs, ... }: lib.genAttrs addons (plugin pkgs));
+      packages = forAll (
+        { pkgs, ... }:
+        lib.genAttrs addons (plugin pkgs)
+      );
 
       checks = forAll (
         { system, pkgs }:

@@ -16,6 +16,7 @@
 `addons/<name>/` is one Neovim plugin:
 
 - `lua/zerodawn/<name>/init.lua` exports `setup(opts)` and the functions that a config binds to keys. The addon binds no keys.
+- Or `package.nix`: the addon is a program, not a plugin. The flake calls it with `callPackage` and gives `version`.
 - `tests/*_test.lua`: each file runs with `nvim -l` in its own `nvim --headless --clean`, with the addon on the runtimepath. An error fails the test.
 - `VERSION` (the first one, for example `0.1.0`) and `CHANGELOG.md` (the line `# Changelog`); a release writes both after that.
 - `README.md` with the options and the functions, and `AGENTS.md` for coding agents.
