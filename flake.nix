@@ -88,7 +88,10 @@
                 (./addons + "/${name}")
               ];
             };
-            nativeBuildInputs = [ pkgs.neovim-unwrapped ];
+            nativeBuildInputs = [
+              pkgs.neovim-unwrapped
+              pkgs.bash
+            ];
           }
           ''
             cp -r "$src" src
