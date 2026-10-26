@@ -26,8 +26,7 @@
           }
         );
       inherit (nixpkgs) lib;
-      version = lib.trim (builtins.readFile ./VERSION);
-      # Every addon has a README.md, an AGENTS.md and at least one test; a missing one fails the evaluation.
+      # Every addon has a VERSION, a CHANGELOG.md, a README.md, an AGENTS.md and at least one test; a missing one fails the evaluation.
       checkAddon =
         name:
         let
@@ -38,7 +37,11 @@
             )
           );
         in
-        if !builtins.pathExists (dir + "/README.md") then
+        if !builtins.pathExists (dir + "/VERSION") then
+          throw "addons/${name}/VERSION is missing; write the first version, for example 0.1.0"
+        else if !builtins.pathExists (dir + "/CHANGELOG.md") then
+          throw "addons/${name}/CHANGELOG.md is missing; write a file with the line # Changelog"
+        else if !builtins.pathExists (dir + "/README.md") then
           throw "addons/${name}/README.md is missing; describe the addon, its setup() options and its functions"
         else if !builtins.pathExists (dir + "/AGENTS.md") then
           throw "addons/${name}/AGENTS.md is missing; write what the addon does, what it needs and what to check"
@@ -54,6 +57,9 @@
       );
       plugin =
         pkgs: name:
+        let
+          version = lib.trim (builtins.readFile (./addons + "/${name}/VERSION"));
+        in
         pkgs.vimUtils.buildVimPlugin {
           pname = "zerodawn-${name}";
           inherit version;
