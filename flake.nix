@@ -91,6 +91,7 @@
             nativeBuildInputs = [
               pkgs.neovim-unwrapped
               pkgs.bash
+              pkgs.git
             ];
           }
           ''
