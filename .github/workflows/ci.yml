@@ -25,7 +25,7 @@ jobs:
         if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'release:')
         run: scripts/release-check.sh
       - name: Every check and the tests of every addon
-        run: nix flake check
+        run: nix flake check --all-systems
 
   release:
     needs: check

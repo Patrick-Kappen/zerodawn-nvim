@@ -89,6 +89,19 @@ wait(function()
 end, "open back")
 assert(switched == nil, "follow switched with a modified buffer")
 assert(calls()[#calls()]:find(" open " .. server .. " " .. tmp .. "/a", 1, true), "open back: " .. calls()[#calls()])
+
+-- a second request for the same folder (the second tmux hook of one switch) does not send tmux back again
+before = #calls()
+pair.follow(tmp .. "/b")
+vim.wait(200)
+assert(#calls() == before, "second request sent tmux back again: " .. vim.inspect(calls()))
+
+-- after tmux went back, a new request for the same folder blocks again
+pair.follow(tmp .. "/a")
+pair.follow(tmp .. "/b")
+wait(function()
+  return #calls() > before
+end, "open back after a new request")
 vim.bo.modified = false
 
 -- exit 3 from open stops the pair

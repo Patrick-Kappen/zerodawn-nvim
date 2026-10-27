@@ -21,7 +21,7 @@
 - `VERSION` (the first one, for example `0.1.0`) and `CHANGELOG.md` (the line `# Changelog`); a release writes both after that.
 - `README.md` with the options and the functions, and `AGENTS.md` for coding agents.
 
-`nix flake check` fails when one of these is missing.
+`nix flake check --all-systems` fails when one of these is missing.
 
 ## Checks
 
@@ -29,8 +29,8 @@
 |---|---|
 | hook, commit | stylua, luacheck, shellcheck, shfmt, nixfmt, statix, deadnix, gitleaks, commit subject |
 | hook, push | the subject of every commit on the branch |
-| PR | the commit subjects and trailers; `release-check` on a PR with a `release:` title; `nix flake check` with every check and the tests of every addon |
-| merge to `main` | `nix flake check`, then the release job |
+| PR | the commit subjects and trailers; `release-check` on a PR with a `release:` title; `nix flake check --all-systems` with every check and the tests of every addon |
+| merge to `main` | `nix flake check --all-systems`, then the release job |
 
 ## Release
 

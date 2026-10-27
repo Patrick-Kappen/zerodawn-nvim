@@ -2,6 +2,9 @@ local M = {}
 
 local opts
 local active = false
+-- The last folder that tmux asked for. One tmux switch can fire two hooks (session and window changed);
+-- the second request for the same folder must not block and send tmux back a second time.
+local requested
 local group = vim.api.nvim_create_augroup("zerodawn.pair", { clear = true })
 
 local function notify(message, level)
@@ -62,6 +65,7 @@ function M.setup(o)
     group = group,
     pattern = "global",
     callback = function()
+      requested = nil
       if active then
         open(vim.fn.getcwd())
       end
@@ -111,7 +115,12 @@ function M.follow(dir)
       return
     end
     active = true
-    if vim.fs.normalize(dir) == vim.fs.normalize(vim.fn.getcwd()) then
+    dir = vim.fs.normalize(dir)
+    if dir == requested then
+      return
+    end
+    requested = dir
+    if dir == vim.fs.normalize(vim.fn.getcwd()) then
       return
     end
     local changed = modified_buffers()
