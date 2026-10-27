@@ -33,6 +33,12 @@ require("zerodawn.<addon>").setup({})
 ## Changes
 
 <!-- changelog:start -->
+## 0.1.2 — 2026-10-27
+
+### pair 0.1.2
+
+- block a tmux switch once, not once for each hook
+
 ## 0.1.1 — 2026-10-27
 
 ### pair 0.1.1
