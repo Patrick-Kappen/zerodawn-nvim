@@ -21,5 +21,5 @@ Neovim addons in Lua. Nix flake with one Neovim plugin package for each addon.
 
 ## Checks
 
-- `just check`: stylua, luacheck, shellcheck, shfmt, the tests, `nix flake check`.
+- `just check`: stylua, luacheck, shellcheck, shfmt, the tests, `nix flake check --all-systems`.
 - `just test [addon]` and `just lint` for one part.
