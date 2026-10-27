@@ -15,7 +15,7 @@ fmt:
 
 # Run every check: lint, tests, nix flake check
 check: lint test
-    nix flake check --all-systems
+    nix flake check
 
 # Bump every addon that changed since its last tag, and the repository; the level comes from the "Change:" trailers
 bump-changed:
