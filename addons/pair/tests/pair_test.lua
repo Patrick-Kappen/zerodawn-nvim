@@ -37,25 +37,34 @@ pair.setup({
 })
 vim.cmd.cd(tmp .. "/a")
 
--- start opens the terminal with the attach command for this server and folder
+-- start with no paired client (open exits 3) opens the terminal with the attach command
 local server = vim.v.servername
 assert(server ~= "", "headless nvim has no server address")
+vim.fn.writefile({ "3" }, tmp .. "/exit")
 pair.start()
+vim.fn.delete(tmp .. "/exit")
 assert(pair.active())
 wait(function()
-  return #calls() == 1
+  return #calls() == 2
 end, "attach call")
+assert(calls()[1] == ("--tmux tmuxw open %s %s"):format(server, tmp .. "/a"), "first open call: " .. calls()[1])
 assert(
-  calls()[1] == ("terminal %s --tmux tmuxw attach %s %s"):format(fake, server, tmp .. "/a"),
-  "attach call: " .. calls()[1]
+  calls()[2] == ("terminal %s --tmux tmuxw attach %s %s"):format(fake, server, tmp .. "/a"),
+  "attach call: " .. calls()[2]
 )
+
+-- start with a paired client moves it and opens no second terminal
+pair.start()
+vim.wait(200)
+assert(#calls() == 3, "second start: " .. vim.inspect(calls()))
+assert(calls()[3] == ("--tmux tmuxw open %s %s"):format(server, tmp .. "/a"), "second start: " .. calls()[3])
 
 -- a folder change in nvim moves tmux
 vim.cmd.cd(tmp .. "/b")
 wait(function()
-  return #calls() == 2
+  return #calls() == 4
 end, "open call")
-assert(calls()[2] == ("--tmux tmuxw open %s %s"):format(server, tmp .. "/b"), "open call: " .. calls()[2])
+assert(calls()[4] == ("--tmux tmuxw open %s %s"):format(server, tmp .. "/b"), "open call: " .. calls()[4])
 
 -- tmux asks to follow: nvim switches folder
 pair.follow(tmp .. "/a")
