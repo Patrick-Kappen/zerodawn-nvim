@@ -74,10 +74,19 @@ function M.active()
 end
 
 --- Open a terminal on the tmux window of the current folder, paired with this nvim server.
+--- When a tmux client is already paired, move it to the current folder and open no terminal.
 function M.start()
   assert(opts, "pair: call require('zerodawn.pair').setup() first")
   if vim.v.servername == "" then
     error("pair: this nvim has no server address; start it with --listen or use nvimx-gui")
+  end
+  local moved = vim.system(command("open", vim.v.servername, vim.fn.getcwd()), { text = true }):wait()
+  if moved.code == 0 then
+    active = true
+    notify("a tmux client is already paired; it shows " .. vim.fn.getcwd())
+    return
+  elseif moved.code ~= 3 then
+    error(("pair: %s open failed: %s"):format(opts.command, vim.trim(moved.stderr)))
   end
   local cmd = vim.list_extend(vim.deepcopy(opts.terminal), command("attach", vim.v.servername, vim.fn.getcwd()))
   local ok, err = pcall(vim.system, cmd, { detach = true })
