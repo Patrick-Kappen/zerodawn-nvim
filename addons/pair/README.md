@@ -9,8 +9,8 @@ It works only after `start()`. A plain nvim does nothing.
 ```lua
 require("zerodawn.pair").setup({
   command = "/path/to/zerodawn-tmux/pair/scripts/pair",
-  tmux = "tmuxw",
-  terminal = { "wezterm", "start", "--class", "nvimx-ide", "--" },
+  tmux = "tmux",
+  terminal = { "wezterm", "start", "--class", "nvim-ide", "--" },
   switch = function(dir) vim.cmd.cd(dir) end,
 })
 vim.keymap.set("n", "<leader>i", require("zerodawn.pair").start)

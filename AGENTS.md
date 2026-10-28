@@ -10,7 +10,7 @@ Neovim addons in Lua. Nix flake with one Neovim plugin package for each addon.
 
 ## Rules
 
-- This repository holds addons, not a config. The Neovim (nvimx) config that loads them is in the owner's nixos-config. An addon binds no keys; the config binds them.
+- This repository holds addons, not a config. The Neovim config that loads them is in the owner's nixos-config. An addon binds no keys; the config binds them.
 - An addon that talks to tmux uses only the command line of zerodawn-tmux. It shows an error that names the missing command when it is not installed.
 - Commit subject: `<scope>: what changed`, scope is an addon name, `release`, `ci`, `docs`, `flake`, `repo` or `deps`. Max 72 characters. Add one trailer `Change: fix|feature|breaking`; it sets the version level. The subjects become the changelog.
 - Work on a branch and worktree add ~/.worktrees and open a PR; `main` is protected by a hook.

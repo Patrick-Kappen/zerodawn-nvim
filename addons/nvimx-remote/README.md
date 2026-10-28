@@ -1,6 +1,6 @@
 # nvimx-remote
 
-Opens Neovide on this machine against an nvimx server on another host, over SSH. Built for `x86_64-linux` and `aarch64-darwin`.
+Opens Neovide on this machine against an nvim server on another host, over SSH. Built for `x86_64-linux` and `aarch64-darwin`.
 
 ```
 nix profile install github:Patrick-Kappen/zerodawn-nvim#nvimx-remote
@@ -12,13 +12,13 @@ nvimx-remote HOST NAME
 
 ## What it does
 
-1. `ssh HOST systemctl --user start nvimx@NAME`, and reads `XDG_RUNTIME_DIR` of HOST.
-2. Forwards `$XDG_RUNTIME_DIR/nvimx/NAME.sock` of HOST to `$TMPDIR/nvimx-remote/HOST-NAME.sock`. No TCP port is opened.
+1. `ssh HOST systemctl --user start nvim@NAME`, and reads `XDG_RUNTIME_DIR` of HOST.
+2. Forwards `$XDG_RUNTIME_DIR/nvim/NAME.sock` of HOST to `$TMPDIR/nvimx-remote/HOST-NAME.sock`. No TCP port is opened.
 3. Runs `neovide --server` on that socket. When Neovide stops, the tunnel stops.
 
 ## Needs on HOST
 
-A systemd user unit `nvimx@.service` that runs `nvim --headless --listen %t/nvimx/%i.sock` and returns from `systemctl start` when the socket exists.
+A systemd user unit `nvim@.service` that runs `nvim --headless --listen %t/nvim/%i.sock` and returns from `systemctl start` when the socket exists.
 
 ## Behaviour
 

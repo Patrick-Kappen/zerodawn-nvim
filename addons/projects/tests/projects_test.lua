@@ -90,7 +90,7 @@ end
 local function setup(extra)
   projects.setup(vim.tbl_extend("force", {
     command = pair,
-    tmux = "tmuxw",
+    tmux = "tmux",
     zoxide = zoxide,
     worktree_root = tmp .. "/worktrees",
     snacks = snacks,
@@ -99,9 +99,9 @@ end
 
 -- setup fails loud for a missing input
 assert(not pcall(projects.pick), "pick before setup did not fail")
-local ok, err = pcall(projects.setup, { command = "/no/such/pair", tmux = "tmuxw", zoxide = zoxide, snacks = snacks })
+local ok, err = pcall(projects.setup, { command = "/no/such/pair", tmux = "tmux", zoxide = zoxide, snacks = snacks })
 assert(not ok and err:find("not executable"), "bad command: " .. tostring(err))
-ok, err = pcall(projects.setup, { command = pair, tmux = "tmuxw", zoxide = "/no/such/zoxide", snacks = snacks })
+ok, err = pcall(projects.setup, { command = pair, tmux = "tmux", zoxide = "/no/such/zoxide", snacks = snacks })
 assert(not ok and err:find("zoxide"), "bad zoxide: " .. tostring(err))
 ok, err = pcall(projects.setup, { command = pair, tmux = "", zoxide = zoxide, snacks = snacks })
 assert(not ok and err:find("tmux"), "empty tmux: " .. tostring(err))
@@ -123,7 +123,7 @@ assert(spec.title:find("· open · <Tab>", 1, true), "default title: " .. spec.t
 assert(items[1].open and items[1].agent, "first entry is not an open pi entry")
 assert(items[1].file == tmp .. "/wt1" and items[1].text:find("wt1", 1, true), "first entry path")
 assert(items[2].open and not items[2].agent, "second entry marks")
-assert(vim.fn.readfile(pair_log)[1] == "--tmux tmuxw list", "pair call: " .. vim.inspect(vim.fn.readfile(pair_log)))
+assert(vim.fn.readfile(pair_log)[1] == "--tmux tmux list", "pair call: " .. vim.inspect(vim.fn.readfile(pair_log)))
 
 -- with nothing open the picker still starts on the open scope, and it is empty
 write(list, {})
@@ -174,7 +174,7 @@ sh({ "git", "-C", repo, "config", "user.email", "test@example.com" })
 sh({ "git", "-C", repo, "config", "user.name", "Test" })
 write(repo .. "/file", { "x" })
 sh({ "git", "-C", repo, "add", "file" })
-sh({ "git", "-C", repo, "commit", "-m", "init" })
+sh({ "git", "-C", repo, "-c", "commit.gpgsign=false", "commit", "-m", "init" })
 sh({ "git", "-C", repo, "branch", "feature" })
 vim.cmd.cd(repo)
 write(list, {})
