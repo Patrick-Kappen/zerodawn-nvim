@@ -2,6 +2,10 @@
 test addon="":
     scripts/test.sh {{addon}}
 
+# Run the tests for the changed paths: an addon path runs its tests, any other path runs every test
+test-changed *files:
+    scripts/test-changed.sh {{files}}
+
 # Lint and check the format
 lint:
     stylua --check .
