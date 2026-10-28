@@ -2,6 +2,10 @@
 
 Short records of choices that shape the repository. Newest at the top.
 
+## 5. projects uses Snacks.picker (2026-10-27)
+
+The addon `projects` opens its picker with Snacks.picker and it is the only dependency of this repository outside Neovim itself. `opts.snacks` takes a fake in the tests. Reason: the nvimx config already runs snacks.nvim and its picker gives the search, the actions and the layout; a second picker would duplicate that. `setup` fails loud when snacks.nvim is not on the runtimepath.
+
 ## 4. An addon can be a program (2026-10-26)
 
 An addon with a `package.nix` builds from that file; the others build as Neovim plugins. The first one is `nvimx-remote`, a shell program that runs on the Mac. Reason: a program that belongs to Neovim gets the same rules as a plugin: README, AGENTS.md, tests, commit scope, version and changelog. Its tests also run with `nvim -l`, and call the program with `vim.system`.

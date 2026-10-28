@@ -24,6 +24,7 @@ require("zerodawn.<addon>").setup({})
 | Addon | What |
 |---|---|
 | [pair](addons/pair/README.md) | Keeps this nvim server and a tmux client on the same repo and worktree; needs the zerodawn-tmux addon pair |
+| [projects](addons/projects/README.md) | One picker for projects and worktrees, built on Snacks.picker; needs the zerodawn-tmux addon pair and zoxide |
 | [nvimx-remote](addons/nvimx-remote/README.md) | Neovide on this machine against an nvimx server on another host, over SSH |
 
 ## Develop
