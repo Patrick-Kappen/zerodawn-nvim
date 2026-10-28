@@ -1,6 +1,12 @@
 # projects
 
-One picker for projects and worktrees, built on Snacks.picker. It starts on the tmux worktree windows of the zerodawn-tmux addon `pair`; with none open it shows the recent projects of zoxide. Choosing an entry changes the folder through the zerodawn-nvim addon `pair`, so tmux follows.
+One picker for projects and worktrees, built on Snacks.picker. It has three scopes and always starts on the first:
+
+1. `open`: the tmux worktree windows of the zerodawn-tmux addon `pair`.
+2. `worktrees`: the git worktrees of the current repo, the open ones first.
+3. `projects`: the recent folders of zoxide.
+
+Choosing an entry changes the folder through the zerodawn-nvim addon `pair`, so tmux follows.
 
 It fixes no key itself; the Neovim config binds `<A-p>` and `<leader>p` to `require("zerodawn.projects").pick`.
 
@@ -35,7 +41,7 @@ vim.keymap.set("n", "<leader>p", require("zerodawn.projects").pick, { desc = "Pr
 | Key | Use |
 |---|---|
 | `Enter` | Switch to the entry, or to the typed folder (a typed path starts with `/`, `~` or `.`). |
-| `Tab` | Switch the scope between worktrees and projects. Typing searches the current scope. |
+| `Tab` | Go to the next scope: open, worktrees, projects, then open again. Typing searches the current scope. |
 | `Ctrl-n` | New worktree: type the branch name, Enter creates it under `worktree_root`. |
 | `Ctrl-d` | Delete a worktree; it asks first when pi runs there. |
 
