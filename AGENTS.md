@@ -6,7 +6,7 @@ Neovim addons in Lua. Nix flake with one Neovim plugin package for each addon.
 
 - `addons/<name>/`: one addon, a Neovim plugin. Code in `lua/zerodawn/<name>/`, entry `require("zerodawn.<name>").setup(opts)`. Tests in `tests/*_test.lua`; each runs with `nvim -l` in its own headless nvim. Every addon has `VERSION`, `CHANGELOG.md`, `README.md`, `AGENTS.md` and at least one test; the flake fails without them.
 - `docs/decisions.md`: why things are the way they are. Read it before a structural change; add a numbered entry when you make one.
-- `docs/todo.md` is the owner's notes. Do not act on it unless asked.
+- `docs/todo/TODO.md` is the open work, `docs/todo/BACKLOG.md` the work for later. Each item has one file in `docs/tasks/`. Remove an item and its file when it is done. Do not act on an item unless asked.
 
 ## Rules
 
