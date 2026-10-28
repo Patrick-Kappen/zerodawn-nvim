@@ -15,7 +15,7 @@ It fixes no key itself; the Neovim config binds `<A-p>` and `<leader>p` to `requ
 ```lua
 require("zerodawn.projects").setup({
   command = "/path/to/zerodawn-tmux/pair/scripts/pair",
-  tmux = "tmuxw",
+  tmux = "tmux",
   zoxide = "zoxide",
   worktree_root = "~/.worktrees",
 })

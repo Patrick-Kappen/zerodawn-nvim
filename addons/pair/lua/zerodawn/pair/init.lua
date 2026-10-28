@@ -82,7 +82,7 @@ end
 function M.start()
   assert(opts, "pair: call require('zerodawn.pair').setup() first")
   if vim.v.servername == "" then
-    error("pair: this nvim has no server address; start it with --listen or use nvimx-gui")
+    error("pair: this nvim has no server address; start it with --listen or use nvim-gui")
   end
   local moved = vim.system(command("open", vim.v.servername, vim.fn.getcwd()), { text = true }):wait()
   if moved.code == 0 then

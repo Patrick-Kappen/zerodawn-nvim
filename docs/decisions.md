@@ -8,7 +8,7 @@ Open work is a list in `docs/todo/TODO.md`, work for later in `docs/todo/BACKLOG
 
 ## 5. projects uses Snacks.picker (2026-10-27)
 
-The addon `projects` opens its picker with Snacks.picker and it is the only dependency of this repository outside Neovim itself. `opts.snacks` takes a fake in the tests. Reason: the nvimx config already runs snacks.nvim and its picker gives the search, the actions and the layout; a second picker would duplicate that. `setup` fails loud when snacks.nvim is not on the runtimepath.
+The addon `projects` opens its picker with Snacks.picker and it is the only dependency of this repository outside Neovim itself. `opts.snacks` takes a fake in the tests. Reason: the nvim config already runs snacks.nvim and its picker gives the search, the actions and the layout; a second picker would duplicate that. `setup` fails loud when snacks.nvim is not on the runtimepath.
 
 ## 4. An addon can be a program (2026-10-26)
 
@@ -24,4 +24,4 @@ An addon exports `setup(opts)` and functions. The Neovim config binds the keys t
 
 ## 1. Addons here, the config in nixos-config (2026-10-25)
 
-This repository holds addons only: code that does one task and has tests. The nvimx config (options, plugin choice, keys) stays in nixos-config. Reason: the same split as zerodawn-pi and pi. Addons get versions, tests and CI, and the config stays quick to change.
+This repository holds addons only: code that does one task and has tests. The nvim config (options, plugin choice, keys) stays in nixos-config. Reason: the same split as zerodawn-pi and pi. Addons get versions, tests and CI, and the config stays quick to change.
