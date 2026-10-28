@@ -45,7 +45,7 @@ vim.keymap.set("n", "<leader>p", require("zerodawn.projects").pick, { desc = "Pr
 | `Ctrl-n` | New worktree: type the branch name, Enter creates it under `worktree_root`. |
 | `Ctrl-d` | Delete a worktree; it asks first when pi runs there. |
 
-An open entry has `●`; an entry where the agent (pi) runs has `π`.
+The current folder of this nvim has `▶`. An open entry has `●`; an entry where the agent (pi) runs has `π`.
 
 ## Functions
 
