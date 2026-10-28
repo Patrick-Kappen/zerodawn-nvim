@@ -198,6 +198,9 @@ items = spec.finder()
 assert(#items == 2, "repo worktrees: " .. vim.inspect(items))
 assert(items[1].file == wt and items[1].open and items[1].branch == "feature", "open worktree first")
 assert(items[2].file == vim.fs.normalize(vim.uv.fs_realpath(repo)) and not items[2].open, "main worktree")
+assert(items[2].current and not items[1].current, "the current folder is not marked: " .. vim.inspect(items))
+assert(spec.format(items[2])[1][1] == "▶ ", "the current mark does not show: " .. vim.inspect(spec.format(items[2])))
+assert(spec.format(items[1])[1][1] == "  ", "another entry shows the current mark")
 write(list, {})
 
 -- Ctrl-d deletes a worktree, and asks first when pi runs there

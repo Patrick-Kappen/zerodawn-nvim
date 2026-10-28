@@ -149,13 +149,23 @@ end
 
 local NEXT_SCOPE = { open = "worktrees", worktrees = "projects", projects = "open" }
 
+local function mark_current(items)
+  local cwd = vim.fn.getcwd()
+  local real = assert(vim.uv.fs_realpath(cwd))
+  local here = { [vim.fs.normalize(cwd)] = true, [vim.fs.normalize(real)] = true }
+  for _, item in ipairs(items) do
+    item.current = here[item.file] or nil
+  end
+  return items
+end
+
 local function find()
   if state.scope == "open" then
-    return open_entries()
+    return mark_current(open_entries())
   elseif state.scope == "worktrees" then
-    return worktree_items()
+    return mark_current(worktree_items())
   end
-  return project_items()
+  return mark_current(project_items())
 end
 
 local function title()
@@ -175,6 +185,7 @@ end
 
 local function format(item)
   local ret = {
+    item.current and { "▶ ", "DiagnosticOk" } or { "  ", "Comment" },
     item.open and { "● ", "Special" } or { "  ", "Comment" },
     item.agent and { "π ", "DiagnosticWarn" } or { "  ", "Comment" },
     { ("%-9s"):format(item.kind), KIND_HL[item.kind] or "Normal" },
