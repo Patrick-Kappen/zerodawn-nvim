@@ -2,7 +2,7 @@
 
 Addons for Neovim, in Lua, as one Nix flake. Each addon is a separate Neovim plugin. Your Neovim config chooses the addons and binds the keys; this repository has no config.
 
-The planned addons are in [docs/todo.md](docs/todo.md).
+The open work is in [docs/todo/TODO.md](docs/todo/TODO.md).
 
 ## Install with Nix
 

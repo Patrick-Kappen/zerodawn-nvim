@@ -2,6 +2,10 @@
 
 Short records of choices that shape the repository. Newest at the top.
 
+## 6. Open work in docs/todo and docs/tasks (2026-10-28)
+
+Open work is a list in `docs/todo/TODO.md`, work for later in `docs/todo/BACKLOG.md`. Each item links to one file in `docs/tasks/` with the description, the source and the original text. A done item and its file go away. Reason: the same layout as zerodawn-pi, so one way to keep work in each repository; one free-form `docs/todo.md` mixed done and open points.
+
 ## 5. projects uses Snacks.picker (2026-10-27)
 
 The addon `projects` opens its picker with Snacks.picker and it is the only dependency of this repository outside Neovim itself. `opts.snacks` takes a fake in the tests. Reason: the nvimx config already runs snacks.nvim and its picker gives the search, the actions and the layout; a second picker would duplicate that. `setup` fails loud when snacks.nvim is not on the runtimepath.
