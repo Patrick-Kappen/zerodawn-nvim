@@ -119,33 +119,34 @@ assert(open() == picker, "pick does not return the picker")
 assert(vim.fn.maparg("<A-p>", "n") == "" and vim.fn.maparg("<leader>p", "n") == "", "the addon bound a key")
 local items = spec.finder()
 assert(#items == 2, "default items: " .. vim.inspect(items))
-assert(spec.title:find("worktrees", 1, true), "default title: " .. spec.title)
+assert(spec.title:find("· open · <Tab>", 1, true), "default title: " .. spec.title)
 assert(items[1].open and items[1].agent, "first entry is not an open pi entry")
 assert(items[1].file == tmp .. "/wt1" and items[1].text:find("wt1", 1, true), "first entry path")
 assert(items[2].open and not items[2].agent, "second entry marks")
 assert(vim.fn.readfile(pair_log)[1] == "--tmux tmuxw list", "pair call: " .. vim.inspect(vim.fn.readfile(pair_log)))
 
--- with nothing open the picker shows the recent projects
+-- with nothing open the picker still starts on the open scope, and it is empty
 write(list, {})
 open()
-items = spec.finder()
-assert(#items == 2, "project items: " .. vim.inspect(items))
-assert(spec.title:find("projects", 1, true), "project title: " .. spec.title)
-assert(items[1].kind == "project" and items[1].file == tmp .. "/proj1", "first project")
-assert(not items[1].open and not items[1].agent, "a project is not marked open")
-assert(vim.fn.readfile(zoxide_log)[1] == "query -l", "zoxide call: " .. vim.inspect(vim.fn.readfile(zoxide_log)))
+assert(spec.title:find("· open · <Tab>", 1, true), "empty open title: " .. spec.title)
+assert(#spec.finder() == 0, "open scope is not empty")
 
--- Tab switches the scope, and the finder reads the new scope
-write(list, { "repo\t" .. tmp .. "/wt1\t%1\t0" })
+-- Tab goes from open to worktrees, to projects, and back to open
+write(list, { "repo\t" .. tmp .. "/proj1\t%1\t1" })
 open()
 spec.actions.toggle_scope(picker)
-assert(picker.finds == 1 and spec.title:find("projects", 1, true), "tab to projects: " .. spec.title)
-items = spec.finder()
-assert(#items == 2 and items[1].kind == "project", "project scope after tab")
+assert(picker.finds == 1 and picker.title:find("· worktrees · <Tab>", 1, true), "tab to worktrees: " .. picker.title)
+assert(#spec.finder() == 0, "worktrees outside a repo: " .. vim.inspect(spec.finder()))
 spec.actions.toggle_scope(picker)
-assert(picker.finds == 2 and spec.title:find("worktrees", 1, true), "tab to worktrees: " .. spec.title)
+assert(picker.finds == 2 and picker.title:find("· projects · <Tab>", 1, true), "tab to projects: " .. picker.title)
 items = spec.finder()
-assert(#items == 1 and items[1].open, "worktree scope after tab")
+assert(#items == 2, "project items: " .. vim.inspect(items))
+assert(items[1].kind == "project" and items[1].file == tmp .. "/proj1", "first project")
+assert(items[1].open and items[1].agent, "an open project is not marked open")
+assert(not items[2].open and not items[2].agent, "a closed project is marked open")
+assert(vim.fn.readfile(zoxide_log)[1] == "query -l", "zoxide call: " .. vim.inspect(vim.fn.readfile(zoxide_log)))
+spec.actions.toggle_scope(picker)
+assert(picker.finds == 3 and picker.title:find("· open · <Tab>", 1, true), "tab to open: " .. picker.title)
 
 -- a typed folder switches there
 local typed = tmp .. "/typed"
@@ -188,6 +189,16 @@ assert(vim.fn.isdirectory(wt) == 1, "worktree not made: " .. wt)
 assert(followed == wt, "new worktree not switched: " .. tostring(followed))
 assert(picker.closed, "new worktree did not close the picker")
 
+-- the worktrees scope lists the worktrees of this repo, the open ones first
+write(list, { "repo\t" .. wt .. "\t%3\t0" })
+open()
+spec.actions.toggle_scope(picker)
+items = spec.finder()
+assert(#items == 2, "repo worktrees: " .. vim.inspect(items))
+assert(items[1].file == wt and items[1].open and items[1].branch == "feature", "open worktree first")
+assert(items[2].file == vim.fs.normalize(vim.uv.fs_realpath(repo)) and not items[2].open, "main worktree")
+write(list, {})
+
 -- Ctrl-d deletes a worktree, and asks first when pi runs there
 local answer = false
 setup({
@@ -210,13 +221,15 @@ assert(picker.mode == nil and picker.finds == 1, "delete did not return to the l
 
 -- a line that is not the pair list contract is an error
 write(list, { "not a pair line" })
-ok, err = pcall(projects.pick)
+open()
+ok, err = pcall(spec.finder)
 assert(not ok and err:find("REPO<TAB>", 1, true), "bad pair line: " .. tostring(err))
 
 -- a failing pair command is an error that names the command
 setup({ command = fail })
 write(list, {})
-ok, err = pcall(projects.pick)
+open()
+ok, err = pcall(spec.finder)
 assert(
   not ok and err:find("failed", 1, true) and err:find("no tmux server", 1, true),
   "pair failure: " .. tostring(err)

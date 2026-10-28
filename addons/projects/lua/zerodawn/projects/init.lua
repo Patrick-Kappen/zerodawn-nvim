@@ -96,21 +96,24 @@ local function repo_worktrees()
   return items
 end
 
-local function worktree_items()
-  local items, seen = {}, {}
-  local function add(entry)
-    if seen[entry.file] then
-      return
-    end
-    seen[entry.file] = true
-    items[#items + 1] = entry
-  end
+local function mark_open(items)
+  local open = {}
   for _, entry in ipairs(open_entries()) do
-    add(entry)
+    open[entry.file] = entry
   end
-  for _, entry in ipairs(repo_worktrees()) do
-    add(entry)
+  for _, item in ipairs(items) do
+    local entry = open[item.file]
+    if entry then
+      item.open = true
+      item.agent = entry.agent
+      item.window = entry.window
+    end
   end
+  return items
+end
+
+local function worktree_items()
+  local items = mark_open(repo_worktrees())
   table.sort(items, function(a, b)
     if a.open ~= b.open then
       return a.open
@@ -132,21 +135,24 @@ local function project_items()
       items[#items + 1] = item
     end
   end
-  return items
+  return mark_open(items)
 end
 
+local NEXT_SCOPE = { open = "worktrees", worktrees = "projects", projects = "open" }
+
 local function find()
-  if state.scope == "projects" then
-    return project_items()
+  if state.scope == "open" then
+    return open_entries()
+  elseif state.scope == "worktrees" then
+    return worktree_items()
   end
-  return worktree_items()
+  return project_items()
 end
 
 local function title()
-  local other = state.scope == "projects" and "worktrees" or "projects"
   return ("Projects · %s · <Tab> %s · Enter switch · type a path · Ctrl-n new · Ctrl-d delete"):format(
     state.scope,
-    other
+    NEXT_SCOPE[state.scope]
   )
 end
 
@@ -281,7 +287,7 @@ local function delete_worktree(picker)
 end
 
 local function toggle_scope(picker)
-  state.scope = state.scope == "projects" and "worktrees" or "projects"
+  state.scope = NEXT_SCOPE[state.scope]
   picker.title = title()
   picker:update_titles()
   picker:find()
@@ -373,10 +379,10 @@ function M.setup(o)
   state = { scope = nil, mode = nil }
 end
 
---- Open the picker. It starts on the open worktrees, or on the recent projects when none is open.
+--- Open the picker on the open worktrees; Tab goes to the worktrees of this repo, then to the projects.
 function M.pick()
   assert(opts, "projects: call require('zerodawn.projects').setup() first")
-  state.scope = #open_entries() > 0 and "worktrees" or "projects"
+  state.scope = "open"
   state.mode = nil
   return snacks().picker.pick({
     title = title(),
