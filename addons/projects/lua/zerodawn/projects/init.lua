@@ -99,7 +99,8 @@ end
 local function mark_open(items)
   local open = {}
   for _, entry in ipairs(open_entries()) do
-    open[entry.file] = entry
+    local seen = open[entry.file]
+    open[entry.file] = { window = seen and seen.window or entry.window, agent = entry.agent or (seen and seen.agent) }
   end
   for _, item in ipairs(items) do
     local entry = open[item.file]

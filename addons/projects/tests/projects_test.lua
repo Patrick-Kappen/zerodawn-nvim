@@ -132,7 +132,7 @@ assert(spec.title:find("· open · <Tab>", 1, true), "empty open title: " .. spe
 assert(#spec.finder() == 0, "open scope is not empty")
 
 -- Tab goes from open to worktrees, to projects, and back to open
-write(list, { "repo\t" .. tmp .. "/proj1\t%1\t1" })
+write(list, { "repo\t" .. tmp .. "/proj1\t%1\t1", "repo\t" .. tmp .. "/proj1\t%2\t0" })
 open()
 spec.actions.toggle_scope(picker)
 assert(picker.finds == 1 and picker.title:find("· worktrees · <Tab>", 1, true), "tab to worktrees: " .. picker.title)
