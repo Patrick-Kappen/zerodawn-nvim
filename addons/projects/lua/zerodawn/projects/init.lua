@@ -113,15 +113,21 @@ local function mark_open(items)
   return items
 end
 
-local function worktree_items()
-  local items = mark_open(repo_worktrees())
+-- Open entries first; `rank` keeps the order within each group, because table.sort is not stable.
+local function open_first(items, rank)
   table.sort(items, function(a, b)
-    if a.open ~= b.open then
-      return a.open
+    if (a.open == true) ~= (b.open == true) then
+      return a.open == true
     end
-    return a.file < b.file
+    return rank(a) < rank(b)
   end)
   return items
+end
+
+local function worktree_items()
+  return open_first(mark_open(repo_worktrees()), function(item)
+    return item.file
+  end)
 end
 
 local function project_items()
@@ -131,12 +137,14 @@ local function project_items()
     local dir = vim.fs.normalize(vim.trim(line))
     if dir ~= "" and not seen[dir] and vim.fn.isdirectory(dir) == 1 then
       seen[dir] = true
-      local item = { kind = "project", file = dir }
+      local item = { kind = "project", file = dir, recent = #items + 1 }
       set_text(item)
       items[#items + 1] = item
     end
   end
-  return mark_open(items)
+  return open_first(mark_open(items), function(item)
+    return item.recent
+  end)
 end
 
 local NEXT_SCOPE = { open = "worktrees", worktrees = "projects", projects = "open" }

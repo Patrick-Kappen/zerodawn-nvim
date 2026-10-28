@@ -13,7 +13,3 @@ The picker of the addon `projects` marks open entries with `●` and entries tha
 ## Parts that exist
 
 - The mark for open entries and for pi: `format` in `addons/projects/lua/zerodawn/projects/init.lua`.
-
-## Related
-
-- [projects-sort-open-projects](projects-sort-open-projects.md)
